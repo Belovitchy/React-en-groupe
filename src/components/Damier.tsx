@@ -1,35 +1,55 @@
 import Cell from "../components/Cell";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-function Damier({ size }: { size: number }) {
+function Damier() {
+	const [size, setSize] = useState(6);
+	const [cellsState, setCellsState] = useState(() => createEmptyDamier(size));
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [turnNumber, setTurnNumber] = useState(0);
+	const [generationSpeed, setGenerationSpeed] = useState(100);
+
 	const sectionStyle = {
 		height: `${20 * size}px`,
 		width: `${20 * size}px`,
 	};
 
-	const [cellsState, setCellsState] = useState(() => createEmptyDamier());
-	const [isPlaying, setIsPlaying] = useState(false);
-
 	// Initialisation au chargement de la page - Crée un tableau à deux dimensions de tous les états de celulle et les initialise à faux
-	function createEmptyDamier() {
+	function createEmptyDamier(size: number) {
 		const initialGrid = [];
-
 		for (let x = 0; x < size; x++) {
 			const row = [];
-
 			for (let y = 0; y < size; y++) {
-				row.push(false); // chaque cellule est initialisée à "morte"
+				row.push(false);
 			}
-
 			initialGrid.push(row);
 		}
-
 		return initialGrid;
 	}
 
-	// Update le tableau d'état en taille, si cette dernière a changé (createEmpty Damier à externaliser pour éviter les erreur Biome mais osef)
+	// Fonction utilitaires de randomisation
+	function GetRandomBoolean() {
+		return Math.random() > 0.5;
+	}
+
+	// Fonction randomisation du tableau et de son contenu
+	function RandomizeGrid() {
+		setTurnNumber(0);
+
+		const next = [];
+		for (let x = 0; x < cellsState.length; x++) {
+			const row = [];
+			for (let y = 0; y < cellsState[x].length; y++) {
+				row.push(GetRandomBoolean());
+			}
+			next.push(row);
+		}
+
+		setCellsState(next);
+	}
+
+	// Update le tableau d'état en taille, si cette dernière a changé
 	useEffect(() => {
-		setCellsState(createEmptyDamier());
+		setCellsState(createEmptyDamier(size));
 	}, [size]);
 
 	// Update l'état d'une cellule x, y : ne sert qu'à transmettre l'info au composant pour gérer le clic souris initial
@@ -54,8 +74,10 @@ function Damier({ size }: { size: number }) {
 		setCellsState(updated);
 	};
 
-	// FONCTION MISE A JOUR DU TABLEAU DANS LE TEMPS ------------- à mettre dans une boucle temporelle !!!!!!!!!!!!!!!
+	// FONCTION MISE A JOUR DU TABLEAU DANS LE TEMPS
 	function NextGeneration() {
+		setTurnNumber(turnNumber + 1);
+
 		//Initialise le tableau de la nouvelle génération
 		const next = [];
 
@@ -116,28 +138,105 @@ function Damier({ size }: { size: number }) {
 
 	// Boucle temporelle
 
-	function HandleIsPlaying() {
-		setIsPlaying(true);
-	}
+	useEffect(() => {
+		if (!isPlaying) return;
+
+		const intervalId = setInterval(() => {
+			NextGeneration();
+		}, generationSpeed); // 10 fois par seconde
+
+		return () => clearInterval(intervalId);
+	}, [isPlaying, cellsState]);
+
+	const handlePlay = () => setIsPlaying(true);
+	const handlePause = () => setIsPlaying(false);
+	const handleReset = () => {
+		setTurnNumber(0);
+		setIsPlaying(false);
+		setCellsState(createEmptyDamier(size));
+	};
 
 	// Affichage des cellules
 	return (
-		<>
-			<button
-				className="border-1 border-amber-950"
-				type="button"
-				onClick={NextGeneration}
-			>
-				⏩​ Next Generation
-			</button>
-			<button
-				className="border-1 border-amber-950"
-				type="button"
-				onClick={HandleIsPlaying}
-			>
-				▶️​ Autoplay
-			</button>
-			<section style={sectionStyle} className="flex flex-wrap m-auto">
+		<section className="flex flex-col lg:flex-row mt-8 ">
+			<section className="flex flex-col gap-8 lg:ml-4 m-auto ">
+				<p className="text-2xl">
+					Taille du terrain: {size}x{size}
+				</p>
+				{isPlaying ? (
+					<p className="flex text-2xl">Playing...</p>
+				) : (
+					<section className="flex text-2xl">
+						<p>Saisir taille:</p>
+						<input
+							type="number"
+							max={35}
+							min={5}
+							value={size}
+							onChange={(e) => setSize(Number(e.target.value))}
+							className="bg-amber-100 text-2xl w-12 ml-6 "
+						/>
+					</section>
+				)}
+
+				<p className="text-2xl">Number of generations : {turnNumber}</p>
+
+				<section className="flex text-2xl">
+					<p>Speed: </p>
+					<input
+						step={100}
+						type="number"
+						value={generationSpeed}
+						onChange={(e) => setGenerationSpeed(Number(e.target.value))}
+						className="bg-amber-100 text-2xl w-20 ml-6 text-center "
+					/>
+					<p>ms</p>
+				</section>
+
+				<button
+					className="border-1 border-amber-600 rounded-lg"
+					type="button"
+					onClick={NextGeneration}
+				>
+					⏩​ Next Generation
+				</button>
+
+				{isPlaying ? (
+					<button
+						className="border-1 border-amber-600 rounded-lg"
+						type="button"
+						onClick={handlePause}
+					>
+						🔴​ Pause
+					</button>
+				) : (
+					<button
+						className="border-1 border-amber-600 rounded-lg"
+						type="button"
+						onClick={handlePlay}
+					>
+						▶️ Play
+					</button>
+				)}
+
+				<button
+					className="border-1 border-amber-600 rounded-lg"
+					type="button"
+					onClick={handleReset}
+				>
+					❌​​​ Reset grid
+				</button>
+
+				<button
+					className="border-1 border-amber-600 rounded-lg"
+					type="button"
+					onClick={RandomizeGrid}
+				>
+					❓​ Randomize grid
+				</button>
+			</section>
+
+			<section style={sectionStyle} className="flex flex-wrap m-auto mt-6 mb-6">
 				{cellsState.map((row, x) =>
 					row.map((isAlive, y) => (
 						<Cell
@@ -148,7 +247,7 @@ function Damier({ size }: { size: number }) {
 					)),
 				)}
 			</section>
-		</>
+		</section>
 	);
 }
 

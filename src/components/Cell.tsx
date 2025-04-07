@@ -14,7 +14,7 @@ function Cell({ isAlive, setIsAlive }) {
 			{isAlive ? (
 				<article
 					onClick={() => setIsAlive(!isAlive)}
-					className="h-5 w-5 border-1 bg-black"
+					className="h-5 w-5 border-1 bg-amber-600"
 				/>
 			) : (
 				<article
