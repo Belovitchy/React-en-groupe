@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Dammier from "../components/Dammier";
+import Damier from "../components/Damier";
 
 function Menu() {
 	const [size, setSize] = useState(2);
 
-	console.log(size);
+	//console.log(size);
 	return (
 		<>
 			<nav>
@@ -19,7 +19,7 @@ function Menu() {
 				/>
 			</nav>
 
-			<Dammier size={size} />
+			<Damier size={size} />
 		</>
 	);
 }
