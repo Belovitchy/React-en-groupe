@@ -14,12 +14,12 @@ function Cell({ isAlive, setIsAlive }) {
 			{isAlive ? (
 				<article
 					onClick={() => setIsAlive(!isAlive)}
-					className="h-5 w-5 border-1 bg-amber-600"
+					className="h-2.5 w-2.5 lg:h-5 lg:w-5 border-1 bg-amber-600"
 				/>
 			) : (
 				<article
 					onClick={() => setIsAlive(!isAlive)}
-					className="h-5 w-5 border-1 bg-white"
+					className="h-2.5 w-2.5 lg:h-5 lg:w-5 border-1 bg-white"
 				/>
 			)}
 		</>

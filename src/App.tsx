@@ -6,9 +6,14 @@ import Header from "./components/Header";
 function App() {
 	return (
 		<>
-			<Header />
-			<Menu />
-			<Footer />
+			<div className="flex flex-col min-h-screen">
+				<Header />
+				<main className="flex-grow">
+					<Menu />
+				</main>
+				{/* Footer */}
+				<Footer />
+			</div>
 		</>
 	);
 }

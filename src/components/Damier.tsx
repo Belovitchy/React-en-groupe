@@ -8,10 +8,7 @@ function Damier() {
 	const [turnNumber, setTurnNumber] = useState(0);
 	const [generationSpeed, setGenerationSpeed] = useState(100);
 
-	const sectionStyle = {
-		height: `${20 * size}px`,
-		width: `${20 * size}px`,
-	};
+	//const sectionStyle = {};
 
 	// Initialisation au chargement de la page - Crée un tableau à deux dimensions de tous les états de celulle et les initialise à faux
 	function createEmptyDamier(size: number) {
@@ -159,7 +156,7 @@ function Damier() {
 	// Affichage des cellules
 	return (
 		<section className="flex flex-col lg:flex-row mt-8 ">
-			<section className="flex flex-col gap-8 lg:ml-4 m-auto ">
+			<section className="flex flex-col gap-8  m-auto ">
 				<p className="text-2xl">
 					Taille du terrain: {size}x{size}
 				</p>
@@ -170,10 +167,15 @@ function Damier() {
 						<p>Saisir taille:</p>
 						<input
 							type="number"
-							max={35}
+							max={32}
 							min={5}
 							value={size}
-							onChange={(e) => setSize(Number(e.target.value))}
+							onChange={(e) => {
+								let newSize = Number(e.target.value);
+								if (newSize > 32) newSize = 32;
+								if (newSize < 5) newSize = 5;
+								setSize(newSize);
+							}}
 							className="bg-amber-100 text-2xl w-12 ml-6 "
 						/>
 					</section>
@@ -184,10 +186,17 @@ function Damier() {
 				<section className="flex text-2xl">
 					<p>Speed: </p>
 					<input
-						step={100}
+						step={50}
 						type="number"
+						max={10000}
+						min={200}
 						value={generationSpeed}
-						onChange={(e) => setGenerationSpeed(Number(e.target.value))}
+						onChange={(e) => {
+							let newSpeed = Number(e.target.value);
+							if (newSpeed > 10000) newSpeed = 10000;
+							if (newSpeed < 200) newSpeed = 200;
+							setGenerationSpeed(newSpeed);
+						}}
 						className="bg-amber-100 text-2xl w-20 ml-6 text-center "
 					/>
 					<p>ms</p>
@@ -236,7 +245,15 @@ function Damier() {
 				</button>
 			</section>
 
-			<section style={sectionStyle} className="flex flex-wrap m-auto mt-6 mb-6">
+			<section
+				style={{
+					"--my-height-phone": `${10 * size}px`,
+					"--my-width-phone": `${10 * size}px`,
+					"--my-height-desk": `${20 * size}px`,
+					"--my-width-desk": `${20 * size}px`,
+				}}
+				className=" lg:w-[var(--my-width-desk)] lg:h-[var(--my-height-desk)] h-[var(--my-height-phone)] w-[var(--my-width-phone)] flex flex-wrap m-auto mt-6 mb-6"
+			>
 				{cellsState.map((row, x) =>
 					row.map((isAlive, y) => (
 						<Cell
