@@ -1,13 +1,14 @@
 import "./index.css";
-
+import Footer from "./components/Footer";
 import Menu from "./components/Menu";
+import Header from "./components/Header";
+
 function App() {
 	return (
 		<>
-			<h1 className="bg-amber-600 text-amber-100 text-6xl p-5 text-center">
-				LE JEU DE LA VIE
-			</h1>
+			<Header />
 			<Menu />
+			<Footer />
 		</>
 	);
 }
