@@ -1,13 +1,6 @@
 import { useState } from "react";
 
 function Cell({ isAlive, setIsAlive }) {
-	//const [isAlive, setIsAlive] = useState(false);
-
-	// isAlive ? carré noir : carré blanc
-
-	// function HandleIsAlive() {
-	// 	isAlive ? setIsAlive(false) : setIsAlive(true);
-	// }
 
 	return (
 		<>

@@ -181,10 +181,10 @@ function Damier() {
 					</section>
 				)}
 
-				<p className="text-2xl">Number of generations : {turnNumber}</p>
+				<p className="text-2xl">Nb de générations : {turnNumber}</p>
 
 				<section className="flex text-2xl">
-					<p>Speed: </p>
+					<p>Vitesse: </p>
 					<input
 						step={50}
 						type="number"
@@ -207,7 +207,7 @@ function Damier() {
 					type="button"
 					onClick={NextGeneration}
 				>
-					⏩​ Next Generation
+					⏩​ Génération suivante
 				</button>
 
 				{isPlaying ? (
@@ -224,7 +224,7 @@ function Damier() {
 						type="button"
 						onClick={handlePlay}
 					>
-						▶️ Play
+						▶️ Jouer
 					</button>
 				)}
 
@@ -233,7 +233,7 @@ function Damier() {
 					type="button"
 					onClick={handleReset}
 				>
-					❌​​​ Reset grid
+					❌​​​ Reinitialiser grille
 				</button>
 
 				<button
@@ -241,7 +241,7 @@ function Damier() {
 					type="button"
 					onClick={RandomizeGrid}
 				>
-					❓​ Randomize grid
+					❓​ Grille aléatoire
 				</button>
 			</section>
 
